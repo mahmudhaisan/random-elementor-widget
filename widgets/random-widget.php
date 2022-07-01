@@ -100,9 +100,9 @@ class Random_Elementor_Widget extends \Elementor\Widget_Base {
      */
     protected function register_controls() {
 
-        //content section
+        // start basic section
         $this->start_controls_section(
-            'content_section',
+            'basic_section',
             [
                 'label' => esc_html__('Contents', 'elementor-currency-control'),
                 'tab' => \Elementor\Controls_Manager::TAB_CONTENT,
@@ -118,23 +118,18 @@ class Random_Elementor_Widget extends \Elementor\Widget_Base {
             ]
         );
 
-
-
         $cpt_cat_args = array(
             'post_type' => 'random_image_cpt',
-            'taxonomy' => 'category',
+            'taxonomy' => 'random493_category',
         );
 
 
-        //getting cpt custom taxonomy
+        //getting cpt custom taxonomy for select control
         $rand_cats = get_categories($cpt_cat_args);
         $rand_cat_array = array();
         foreach ($rand_cats as $rand_cat) {
             $rand_cat_array[$rand_cat->name] = $rand_cat->name;
         }
-
-
-
 
         $this->add_control(
             'select_rand_category',
@@ -146,21 +141,60 @@ class Random_Elementor_Widget extends \Elementor\Widget_Base {
             ]
         );
 
-        $this->add_control(
-            'select_rand_categorys',
+        $this->end_controls_section();
+
+
+
+        //Random Title Tabs
+        $this->start_controls_section(
+            'rand_title_style',
             [
-                'label' => esc_html__('Select Category', 'plugin-name'),
-                'type' => \Elementor\Controls_Manager::SELECT2,
-                'default' => 'black',
-                'options' => $rand_cat_array,
+                'label' => esc_html__('Title', 'elementor-currency-control'),
+                'tab' => \Elementor\Controls_Manager::TAB_CONTENT,
             ]
         );
+
         $this->add_control(
-            'select_rand_categorysss',
+            'rand_title_color',
             [
-                'label' => esc_html__('Select Category', 'plugin-name'),
-                'type' => \Elementor\Controls_Manager::TEXTAREA,
-                'default' => 'black',
+                'label' => esc_html__('Title Color', 'elementor-currency-control'),
+                'type' => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .random-card-title' => 'color: {{VALUE}}',
+                ],
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Typography::get_type(),
+            [
+                'name' => 'rand_title_typography',
+                'selector' => '{{WRAPPER}} .random-card-title',
+            ]
+        );
+
+
+        $this->add_control(
+            'rand_title_align',
+            [
+                'label' => esc_html__('Alignment', 'plugin-name'),
+                'type' => \Elementor\Controls_Manager::CHOOSE,
+                'options' => [
+                    'left' => [
+                        'title' => esc_html__('Left', 'plugin-name'),
+                        'icon' => 'eicon-text-align-left',
+                    ],
+                    'center' => [
+                        'title' => esc_html__('Center', 'plugin-name'),
+                        'icon' => 'eicon-text-align-center',
+                    ],
+                    'right' => [
+                        'title' => esc_html__('Right', 'plugin-name'),
+                        'icon' => 'eicon-text-align-right',
+                    ],
+                ],
+                'default' => 'center',
+                'toggle' => true,
             ]
         );
 
@@ -168,70 +202,156 @@ class Random_Elementor_Widget extends \Elementor\Widget_Base {
         $this->end_controls_section();
 
 
-
-
-
-
+        //Image Section Tab
         $this->start_controls_section(
-            'content_sections',
+            'image_section',
             [
-                'label' => esc_html__('Contents', 'elementor-currency-control'),
+                'label' => esc_html__('Random Thumbanail', 'elementor-currency-control'),
                 'tab' => \Elementor\Controls_Manager::TAB_CONTENT,
             ]
         );
 
-        $this->add_control(
-            'button_text',
-            [
-                'label' => esc_html__('Button Text', 'elementor-currency-control'),
-                'type' => \Elementor\Controls_Manager::TEXT,
-                'default' => "Pick Another Card",
-            ]
-        );
-
-
-
-        $cpt_cat_args = array(
-            'post_type' => 'random_image_cpt',
-            'taxonomy' => 'category',
-        );
-
-
-        //getting cpt custom taxonomy
-        $rand_cats = get_categories($cpt_cat_args);
-        $rand_cat_array = array();
-        foreach ($rand_cats as $rand_cat) {
-            $rand_cat_array[$rand_cat->name] = $rand_cat->name;
-        }
-
-
-
 
         $this->add_control(
-            'select_rand_category',
+            'rand_thumbnail_width',
             [
-                'label' => esc_html__('Select Category', 'plugin-name'),
-                'type' => \Elementor\Controls_Manager::SELECT,
-                'default' => 'black',
-                'options' => $rand_cat_array,
+                'label' => esc_html__('Thumbnail Width', 'plugin-name'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px', '%'],
+                'range' => [
+                    'px' => [
+                        'min' => 0,
+                        'max' => 1000,
+                        'step' => 5,
+                    ],
+                    '%' => [
+                        'min' => 0,
+                        'max' => 100,
+                    ],
+                ],
+                'default' => [
+                    'unit' => '%',
+                    'size' => 100,
+                ],
+                'selectors' => [
+                    '{{WRAPPER}} .rand-thumbnail' => 'width: {{SIZE}}{{UNIT}};',
+                ],
             ]
         );
 
         $this->add_control(
-            'select_rand_categorys',
+            'rand_thumbnail_height',
             [
-                'label' => esc_html__('Select Category', 'plugin-name'),
-                'type' => \Elementor\Controls_Manager::SELECT2,
-                'default' => 'black',
-                'options' => $rand_cat_array,
+                'label' => esc_html__('Thumbnail Height', 'plugin-name'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['px', '%'],
+                'range' => [
+                    'px' => [
+                        'min' => 0,
+                        'max' => 1000,
+                        'step' => 5,
+                    ],
+                    '%' => [
+                        'min' => 0,
+                        'max' => 100,
+                    ],
+                ],
+                'default' => [
+                    'unit' => '%',
+                    'size' => 50,
+                ],
+
             ]
         );
-        $this->add_control(
-            'select_rand_categorysss',
+
+
+        $this->end_controls_section();
+
+
+        //Contents Sections Tab
+        $this->start_controls_section(
+            'rand_content_section',
             [
-                'label' => esc_html__('Select Category', 'plugin-name'),
-                'type' => \Elementor\Controls_Manager::TEXTAREA,
-                'default' => 'black',
+                'label' => esc_html__('Random Post Content', 'elementor-currency-control'),
+                'tab' => \Elementor\Controls_Manager::TAB_CONTENT,
+            ]
+        );
+
+
+        $this->add_control(
+            'rand_content_color',
+            [
+                'label' => esc_html__('content Color', 'elementor-currency-control'),
+                'type' => \Elementor\Controls_Manager::COLOR,
+                'selectors' => [
+                    '{{WRAPPER}} .random-card-text' => 'color: {{VALUE}}',
+                ],
+            ]
+        );
+
+        $this->add_group_control(
+            \Elementor\Group_Control_Typography::get_type(),
+            [
+                'name' => 'rand_content_typography',
+                'selector' => '{{WRAPPER}} .random-card-text',
+            ]
+        );
+
+
+        $this->add_control(
+            'rand_content_align',
+            [
+                'label' => esc_html__('Alignment', 'plugin-name'),
+                'type' => \Elementor\Controls_Manager::CHOOSE,
+                'options' => [
+                    'left' => [
+                        'title' => esc_html__('Left', 'plugin-name'),
+                        'icon' => 'eicon-text-align-left',
+                    ],
+                    'center' => [
+                        'title' => esc_html__('Center', 'plugin-name'),
+                        'icon' => 'eicon-text-align-center',
+                    ],
+                    'right' => [
+                        'title' => esc_html__('Right', 'plugin-name'),
+                        'icon' => 'eicon-text-align-right',
+                    ],
+                ],
+                'default' => 'center',
+                'toggle' => true,
+            ]
+        );
+
+        $this->end_controls_section();
+
+
+
+        //layout Sections Tab
+        $this->start_controls_section(
+            'rand_layout_section',
+            [
+                'label' => esc_html__('Random Layout Section', 'elementor-currency-control'),
+                'tab' => \Elementor\Controls_Manager::TAB_CONTENT,
+            ]
+        );
+
+
+        $this->add_control(
+            'rand_layout_width',
+            [
+                'label' => esc_html__('Layout Width', 'plugin-name'),
+                'type' => \Elementor\Controls_Manager::SLIDER,
+                'size_units' => ['%'],
+                'range' => [
+                    '%' => [
+                        'min' => 0,
+                        'max' => 100,
+                    ],
+                ],
+                'default' => [
+                    'unit' => '%',
+                    'size' => 70,
+                ],
             ]
         );
 
@@ -248,18 +368,6 @@ class Random_Elementor_Widget extends \Elementor\Widget_Base {
      * @access protected
      */
     protected function render() {
-
-        $settings = $this->get_settings_for_display();
-
-        echo  $settings['button_text'];
-        echo '<br>';
-        echo  $settings['select_rand_category'];
-        echo '<br>';
-        // echo  $settings['select_rand_categorysss']; 
-?>
-
-        <button style="background-color:<?php echo  $settings['button_text']; ?>">Burn</button>
-
-
-<?php }
+        require_once(PLUGIN_DIR . '/widgets/random-html-parts.php');
+    }
 }

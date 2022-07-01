@@ -15,6 +15,8 @@ if (!defined('ABSPATH')) {
 }
 
 
+define('PLUGIN_DIR', __DIR__);
+
 
 /**
  * Register Random Control.
@@ -48,6 +50,7 @@ add_action('elementor/controls/register', 'register_random_control');
 function register_random_widget($widgets_manager) {
 
     require_once(__DIR__ . '/widgets/random-widget.php');
+
 
     $widgets_manager->register(new \Random_Elementor_Widget());
 }
